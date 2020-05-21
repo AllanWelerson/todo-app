@@ -1,46 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { Text, Alert, Keyboard, AsyncStorage } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { Keyboard, AsyncStorage } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Container, Title, Header, InputSearch, SearchButton,
-         NewItemForm, InputNewItem, NewItemButton, TaskList, Task  } from './styles';
+import { Container, Title, Header, InputSearch, SearchButton, TaskButton, TaskIconButton,
+         NewItemForm, InputNewItem, NewItemButton, TaskList, Task, TaskName  } from './styles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import { TaskContext } from '../../contexts/TaskContext';
 
 const Home = () => {
 
   const navigation = useNavigation();
+  const { tasks, setTasks, handleDone, handleStar, handleAddTask } = useContext(TaskContext); 
 
   const [searchActive, setSearchActive] = useState(false);
-  const [tasks, setTask] = useState([]);
+  // const [tasks, setTask] = useState([]);
   const [newTask, setNewTask] = useState("");
 
   async function loadTasks(){
-    
     const t = await AsyncStorage.getItem('tasks');
 
     if(t){
-      setTask(JSON.parse(t));
+      setTasks(JSON.parse(t));
     }
 
   }
 
-  function handleAddTask() {
-
-    let existsTask = tasks.filter(task => task.name === newTask).length > 0 ? true : false;
-    if(newTask.trim().length === 0){
-      Alert.alert('Type anything');
-      return false;
+  function addTask() {
+    
+    if(handleAddTask(newTask)){
+      
+      setNewTask('');
+      Keyboard.dismiss();
     }
     
-    if(existsTask){
-      Alert.alert('Already exists');
-      return false;
-    }
-      let taskObj = {  name: newTask};
-      setTask([...tasks, taskObj]);
-      setNewTask('');
-
-      Keyboard.dismiss();
   }
+  
+  
 
   useEffect(() => {
     if(tasks.length != 0){
@@ -58,7 +53,7 @@ const Home = () => {
    <Header>
       {
         searchActive === false
-        ? <Title>Tasks</Title>
+        ? <Title>Tarefas</Title>
         : <InputSearch 
               autoCorrect={false}
               autoCapitalize="none"
@@ -74,14 +69,14 @@ const Home = () => {
       <InputNewItem 
         autoCorrect={false}
         autoCapitalize="none"
-        placeholder="Add New Task"
+        placeholder="Adicionar nova tarefa"
         value={newTask}
         onChangeText={text => setNewTask(text)}
         returnKeyType="send"
         onSubmitEditing={handleAddTask}
       />
 
-      <NewItemButton onPress={handleAddTask}>
+      <NewItemButton onPress={() => addTask()}>
         <Ionicons name="ios-add" size={20} color="#FFF"></Ionicons>
       </NewItemButton>
 
@@ -93,9 +88,29 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
         renderItem={({ item: task }) => (
           <Task onPress={() => navigation.navigate('Item')}>
-            <Text>
-              {task.name}
-            </Text>
+            
+            
+            <TaskIconButton onPress={() => handleDone(task.name)}>
+            { task.done
+              ?<Ionicons name="ios-checkbox" size={26} color="#95B2FC"></Ionicons>
+              :<Ionicons name="ios-square-outline" size={26} color="#95B2FC"></Ionicons>
+            }
+            </TaskIconButton>
+            
+            <TaskButton onPress={() => navigation.navigate("Item")}>
+              <TaskName>
+                {task.name}
+              </TaskName>
+            </TaskButton>
+
+            <TaskIconButton onPress={() => handleStar(task.name)}>
+              { task.star
+                ? <Ionicons name="ios-star" size={26} color="#95B2FC"></Ionicons>
+                : <Ionicons name="ios-star-outline" size={26} color="#95B2FC"></Ionicons>
+              }
+              
+            </TaskIconButton>
+
           </Task>
         )}
       />

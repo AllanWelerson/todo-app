@@ -62,16 +62,32 @@ export const NewItemButton = styled(RectButton)`
 `;
 
 export const TaskList = styled.FlatList`
-  padding: 20px;
-  margin-bottom: 180px;
+  padding: 10px 5px ;
+  margin-bottom: 170px;
 `;
 
-export const Task = styled.TouchableOpacity`
+export const Task = styled.View`
   border: 1px solid #ccc;
   border-top-width : 0;
   border-left-width: 0;
   border-right-width: 0;
   padding: 10px 20px;
   font-size: 30px;
-  margin-top: 10px;  
+  margin-top: 10px;
+  flex-direction: row; 
+  align-items: center; 
+`;
+
+export const TaskName = styled.Text`
+  font-size: 14px;
+`;
+
+export const TaskButton = styled.TouchableOpacity`
+  flex: 1;
+  margin: 10px 15px;
+  font-size: 14px;
+`;
+
+export const TaskIconButton = styled.TouchableOpacity`
+  
 `;
