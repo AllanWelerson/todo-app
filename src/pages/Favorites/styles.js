@@ -38,7 +38,7 @@ export const SearchButton = styled(RectButton)`
 
 export const TaskList = styled.FlatList`
   padding: 10px 5px ;
-  margin-bottom: 170px;
+  margin-bottom: 90px;
 `;
 
 export const Task = styled.View`

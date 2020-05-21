@@ -5,6 +5,7 @@ export const TaskContext = createContext();
 
 const TaskProvider = ({children}) => {
   const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState("");
 
   const handleDone = (name) => {
     const tasksDone = tasks.map(task => {
@@ -28,10 +29,10 @@ const TaskProvider = ({children}) => {
     setTasks(tasksStar);
   }
 
-  const handleAddTask = (newTask) => {
+  const handleAddTask = () => {
 
     let existsTask = tasks.filter(task => task.name === newTask).length > 0 ? true : false;
-    
+
     if(newTask.trim().length === 0){
       Alert.alert('Digite algo');
       return false;
@@ -44,12 +45,13 @@ const TaskProvider = ({children}) => {
 
     let taskObj = {  name: newTask, done: false, star: false};
     setTasks([...tasks, taskObj]);
-    
+    setNewTask('');
+
     return true;  
   }
 
   return (
-    <TaskContext.Provider value={{tasks, setTasks, handleDone, handleStar, handleAddTask}}>
+    <TaskContext.Provider value={{tasks, setTasks, handleDone, handleStar, handleAddTask, newTask, setNewTask}}>
       {children}
     </TaskContext.Provider>
   );

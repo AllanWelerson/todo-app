@@ -10,9 +10,21 @@ const Favorites = () => {
   const navigation = useNavigation();
   const { tasks, handleDone, handleStar} = useContext(TaskContext); 
 
+  const [searchText, setSearchText] = useState('');
   const [searchActive, setSearchActive] = useState(false);
   const [starred, setStarred] = useState([]);
-
+  
+  function handleSearch() {
+    if(searchText.length > 0){
+      setStarred(tasks.filter(task => task.star === true && task.name.includes(searchText)));
+    }else{
+      setStarred(tasks.filter(task => task.star === true));
+    }
+  }
+  
+  useEffect(() => {
+    handleSearch();
+  }, [searchText, searchText]) 
 
   useEffect(() => {
     setStarred(tasks.filter(task => task.star === true));
@@ -21,16 +33,19 @@ const Favorites = () => {
   return (
   <Container>
 
-   <Header>
+<Header>
       {
         searchActive === false
         ? <Title>Favoritas</Title>
-        : <InputSearch 
+        : <InputSearch
+              value={searchText} 
+              onChangeText={text => setSearchText(text)}
               autoCorrect={false}
               autoCapitalize="none"
-              placeholder="Search Tasks"
+              placeholder="Procurar Tarefas"
               />
       }
+
       <SearchButton onPress={() => setSearchActive(setSearchActive => !setSearchActive)}>
         <Ionicons name="ios-search" size={20} color="#FFF"></Ionicons>
       </SearchButton>

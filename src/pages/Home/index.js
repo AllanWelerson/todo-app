@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Keyboard, AsyncStorage } from 'react-native';
+import {AsyncStorage } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Container, Title, Header, InputSearch, SearchButton, TaskButton, TaskIconButton,
          NewItemForm, InputNewItem, NewItemButton, TaskList, Task, TaskName  } from './styles';
@@ -10,11 +10,11 @@ import { TaskContext } from '../../contexts/TaskContext';
 const Home = () => {
 
   const navigation = useNavigation();
-  const { tasks, setTasks, handleDone, handleStar, handleAddTask } = useContext(TaskContext); 
+  const { tasks, setTasks, handleDone, handleStar, handleAddTask, newTask, setNewTask } = useContext(TaskContext); 
 
+  const [searchText, setSearchText] = useState('');
   const [searchActive, setSearchActive] = useState(false);
-  // const [tasks, setTask] = useState([]);
-  const [newTask, setNewTask] = useState("");
+  const [tasksHome, setTasksHome] = useState([]);
 
   async function loadTasks(){
     const t = await AsyncStorage.getItem('tasks');
@@ -25,27 +25,31 @@ const Home = () => {
 
   }
 
-  function addTask() {
-    
-    if(handleAddTask(newTask)){
-      
-      setNewTask('');
-      Keyboard.dismiss();
+  function handleSearch() {
+    if(searchText.length > 0){
+      setTasksHome(tasks.filter(task => task.name.includes(searchText)));
+    }else{
+      setTasksHome(tasks);
     }
-    
   }
   
-  
+  useEffect(() => {
+    handleSearch();
+  }, [searchText]) 
 
   useEffect(() => {
     if(tasks.length != 0){
       AsyncStorage.setItem('tasks', JSON.stringify(tasks));
     }
-  }, [tasks])
+
+    handleSearch();
+
+  }, [tasks]);
 
   useEffect(() => {
     loadTasks();
   }, []);
+
 
   return (
   <Container>
@@ -54,12 +58,15 @@ const Home = () => {
       {
         searchActive === false
         ? <Title>Tarefas</Title>
-        : <InputSearch 
+        : <InputSearch
+              value={searchText} 
+              onChangeText={text => setSearchText(text)}
               autoCorrect={false}
               autoCapitalize="none"
-              placeholder="Search Tasks"
+              placeholder="Procurar Tarefas"
               />
       }
+
       <SearchButton onPress={() => setSearchActive(setSearchActive => !setSearchActive)}>
         <Ionicons name="ios-search" size={20} color="#FFF"></Ionicons>
       </SearchButton>
@@ -76,14 +83,14 @@ const Home = () => {
         onSubmitEditing={handleAddTask}
       />
 
-      <NewItemButton onPress={() => addTask()}>
+      <NewItemButton onPress={() => handleAddTask()}>
         <Ionicons name="ios-add" size={20} color="#FFF"></Ionicons>
       </NewItemButton>
 
     </NewItemForm>
       
       <TaskList 
-        data={tasks}
+        data={tasksHome}
         keyExtractor={task => String(task.name)}
         showsVerticalScrollIndicator={false}
         renderItem={({ item: task }) => (
