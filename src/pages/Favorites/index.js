@@ -21,6 +21,8 @@ const Favorites = () => {
       setStarred(tasks.filter(task => task.star === true));
     }
   }
+
+  
   
   useEffect(() => {
     handleSearch();

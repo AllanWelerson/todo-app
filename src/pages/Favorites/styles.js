@@ -42,26 +42,27 @@ export const TaskList = styled.FlatList`
 `;
 
 export const Task = styled.View`
-  border: 1px solid #ccc;
-  border-top-width : 0;
-  border-left-width: 0;
-  border-right-width: 0;
-  padding: 10px 20px;
+  padding: 10px;
   font-size: 30px;
-  margin-top: 10px;
   flex-direction: row; 
   align-items: center; 
 `;
 
 export const TaskName = styled.Text`
-  font-size: 14px;
+  font-size: 16px;
 `;
 
 export const TaskButton = styled.TouchableOpacity`
   flex: 1;
   margin: 10px 15px;
-  font-size: 14px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-top-width : 0;
+  border-left-width: 0;
+  border-right-width: 0;
 `;
+
 
 export const TaskIconButton = styled.TouchableOpacity`
   

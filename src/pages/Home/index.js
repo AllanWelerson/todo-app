@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import {AsyncStorage } from 'react-native';
+import { AsyncStorage, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Container, Title, Header, InputSearch, SearchButton, TaskButton, TaskIconButton,
          NewItemForm, InputNewItem, NewItemButton, TaskList, Task, TaskName  } from './styles';
@@ -10,7 +10,14 @@ import { TaskContext } from '../../contexts/TaskContext';
 const Home = () => {
 
   const navigation = useNavigation();
-  const { tasks, setTasks, handleDone, handleStar, handleAddTask, newTask, setNewTask } = useContext(TaskContext); 
+  const { tasks, 
+          setTasks, 
+          handleDone, 
+          handleStar, 
+          handleAddTask, 
+          newTask, 
+          setNewTask, 
+          handleDeleteTask } = useContext(TaskContext); 
 
   const [searchText, setSearchText] = useState('');
   const [searchActive, setSearchActive] = useState(false);
@@ -23,6 +30,17 @@ const Home = () => {
       setTasks(JSON.parse(t));
     }
 
+  }
+
+  function deleteTask(name) {
+    Alert.alert(
+      'Apagar Tarefa',
+      `Deseja apagar tarefa ${name} ?`,
+      [
+        {text: 'Não', onPress: () => {}, style: 'cancel'},
+        {text: 'Sim', onPress: () => handleDeleteTask(name)},
+      ]
+    );
   }
 
   function handleSearch() {
@@ -94,8 +112,7 @@ const Home = () => {
         keyExtractor={task => String(task.name)}
         showsVerticalScrollIndicator={false}
         renderItem={({ item: task }) => (
-          <Task onPress={() => navigation.navigate('Item')}>
-            
+          <Task>
             
             <TaskIconButton onPress={() => handleDone(task.name)}>
             { task.done
@@ -104,7 +121,8 @@ const Home = () => {
             }
             </TaskIconButton>
             
-            <TaskButton onPress={() => navigation.navigate("Item")}>
+            <TaskButton onPress={() => navigation.navigate("Item")}
+                        onLongPress={() => deleteTask(task.name)}>
               <TaskName>
                 {task.name}
               </TaskName>

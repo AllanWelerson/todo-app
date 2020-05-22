@@ -18,6 +18,10 @@ const TaskProvider = ({children}) => {
     setTasks(tasksDone);
   }
 
+  const handleDeleteTask = (name) => {
+    setTasks(tasks.filter(task => task.name !== name) );
+  }
+
   const handleStar = (name) => {
     const tasksStar = tasks.map(task => {
                   if(task.name === name){
@@ -51,7 +55,8 @@ const TaskProvider = ({children}) => {
   }
 
   return (
-    <TaskContext.Provider value={{tasks, setTasks, handleDone, handleStar, handleAddTask, newTask, setNewTask}}>
+    <TaskContext.Provider value={{tasks, setTasks, handleDone, handleStar, handleAddTask, 
+                                  newTask, setNewTask, handleDeleteTask}}>
       {children}
     </TaskContext.Provider>
   );
