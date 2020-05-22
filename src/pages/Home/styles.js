@@ -1,5 +1,6 @@
 import styled from 'styled-components/native';
 import { RectButton } from 'react-native-gesture-handler';
+import { Menu, MenuTrigger } from 'react-native-popup-menu';
 
 export const Container = styled.View`
 
@@ -32,8 +33,21 @@ export const SearchButton = styled(RectButton)`
   justify-content: center;
   align-items: center;
   border-radius: 32px;
-  margin-left: 10px;
-  padding: 0 12px;
+  margin-left: 5px;
+  padding: 0 10px;
+`;
+
+export const MenuButton = styled(Menu)`
+  justify-content: center;
+  align-items: center;
+  border-radius: 32px;
+  margin-left: 5px;
+  padding: 0 10px;
+`;
+
+
+export const TextMenu = styled.Text`
+  font-size: 16px;
 `;
 
 export const NewItemForm = styled.View`

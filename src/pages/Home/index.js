@@ -1,11 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { AsyncStorage, Alert } from 'react-native';
+import { AsyncStorage, Alert, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Container, Title, Header, InputSearch, SearchButton, TaskButton, TaskIconButton,
-         NewItemForm, InputNewItem, NewItemButton, TaskList, Task, TaskName  } from './styles';
+         NewItemForm, InputNewItem, NewItemButton, TaskList, Task, TaskName, MenuButton, TextMenu  } from './styles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { TaskContext } from '../../contexts/TaskContext';
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger
+} from 'react-native-popup-menu';
 
 const Home = () => {
 
@@ -22,6 +28,7 @@ const Home = () => {
   const [searchText, setSearchText] = useState('');
   const [searchActive, setSearchActive] = useState(false);
   const [tasksHome, setTasksHome] = useState([]);
+  const [typeList, setTypeList] = useState('all');
 
   async function loadTasks(){
     const t = await AsyncStorage.getItem('tasks');
@@ -44,16 +51,32 @@ const Home = () => {
   }
 
   function handleSearch() {
-    if(searchText.length > 0){
-      setTasksHome(tasks.filter(task => task.name.includes(searchText)));
-    }else{
-      setTasksHome(tasks);
-    }
+
+      setTasksHome(tasks.filter(task => {
+        let returnTask = true;
+        if(searchText.length){
+          if (!task.name.includes(searchText)){
+            returnTask = false;
+          }
+        }
+
+        if(typeList === 'done' && task.done !== true){
+          returnTask = false;
+        }
+
+        if(typeList === 'doing' && task.done === true){
+          returnTask = false;
+        }
+        
+        return returnTask;
+      
+      }));
+   
   }
   
   useEffect(() => {
     handleSearch();
-  }, [searchText]) 
+  }, [searchText, typeList]) 
 
   useEffect(() => {
     if(tasks.length != 0){
@@ -75,7 +98,8 @@ const Home = () => {
    <Header>
       {
         searchActive === false
-        ? <Title>Tarefas</Title>
+        ?<Title>Tarefas</Title>
+          
         : <InputSearch
               value={searchText} 
               onChangeText={text => setSearchText(text)}
@@ -88,6 +112,23 @@ const Home = () => {
       <SearchButton onPress={() => setSearchActive(setSearchActive => !setSearchActive)}>
         <Ionicons name="ios-search" size={20} color="#FFF"></Ionicons>
       </SearchButton>
+      
+      <MenuButton>    
+        <MenuTrigger>
+          <Ionicons name="ios-menu" size={20} color="#FFF"></Ionicons>
+        </MenuTrigger>
+        <MenuOptions>
+          <MenuOption onSelect={() => setTypeList('all')}>
+            <TextMenu>Todos</TextMenu>
+          </MenuOption>
+          <MenuOption onSelect={() => setTypeList('doing')} >
+            <TextMenu>Pendentes</TextMenu>
+          </MenuOption>
+          <MenuOption onSelect={() => setTypeList('done')} >
+            <TextMenu>Completos</TextMenu>
+          </MenuOption>
+        </MenuOptions>
+      </MenuButton>
 
     </Header>
      <NewItemForm> 
@@ -142,6 +183,20 @@ const Home = () => {
    
   </Container>
   );
+}
+
+const triggerStyles = {
+  triggerText: {
+    color: '#fff',
+    fontSize: 25,
+  },
+  triggerWrapper: {
+    padding: 5,
+  },
+};
+
+const menuStyles = {
+  flex: 1,
 }
 
 export default Home;
