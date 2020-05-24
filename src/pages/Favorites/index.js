@@ -10,6 +10,7 @@ import {
   MenuTrigger
 } from 'react-native-popup-menu';
 
+import HeaderTasks from '../../components/HeaderTasks';
 import { TaskContext } from '../../contexts/TaskContext';
 
 const Favorites = () => {
@@ -65,43 +66,13 @@ const Favorites = () => {
   return (
   <Container>
 
-<Header>
-      {
-        searchActive === false
-        ? <Title>Favoritas</Title>
-        : <InputSearch
-              value={searchText} 
-              onChangeText={text => setSearchText(text)}
-              autoCorrect={false}
-              autoCapitalize="none"
-              placeholder="Procurar Tarefas"
-              />
-      }
+    <HeaderTasks  title="Favoritas" 
+                  searchText={searchText} 
+                  searchActive={searchActive} 
+                  setSearchText={setSearchText}
+                  setSearchActive={setSearchActive}
+                  setTypeList={setTypeList}/>
 
-      <SearchButton onPress={() => setSearchActive(setSearchActive => !setSearchActive)}>
-        <Ionicons name="ios-search" size={20} color="#FFF"></Ionicons>
-      </SearchButton>
-    
-      <MenuButton>    
-        <MenuTrigger>
-          <Ionicons name="ios-menu" size={20} color="#FFF"></Ionicons>
-        </MenuTrigger>
-        <MenuOptions>
-          <MenuOption onSelect={() => setTypeList('all')}>
-            <TextMenu>Todos</TextMenu>
-          </MenuOption>
-          <MenuOption onSelect={() => setTypeList('doing')} >
-            <TextMenu>Pendentes</TextMenu>
-          </MenuOption>
-          <MenuOption onSelect={() => setTypeList('done')} >
-            <TextMenu>Completos</TextMenu>
-          </MenuOption>
-        </MenuOptions>
-      </MenuButton>
-
-
-    </Header>
-      
       <TaskList 
         data={starred}
         keyExtractor={task => String(task.name)}

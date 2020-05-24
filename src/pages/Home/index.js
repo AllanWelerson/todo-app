@@ -1,17 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { AsyncStorage, Alert, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Container, Title, Header, InputSearch, SearchButton, TaskButton, TaskIconButton,
+import { Container, TaskButton, TaskIconButton,
          NewItemForm, InputNewItem, NewItemButton, TaskList, Task, TaskName, MenuButton, TextMenu  } from './styles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+import HeaderTasks from '../../components/HeaderTasks';
 import { TaskContext } from '../../contexts/TaskContext';
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger
-} from 'react-native-popup-menu';
 
 const Home = () => {
 
@@ -94,43 +89,13 @@ const Home = () => {
 
   return (
   <Container>
+    <HeaderTasks  title="Tarefas" 
+                  searchText={searchText} 
+                  searchActive={searchActive} 
+                  setSearchText={setSearchText}
+                  setSearchActive={setSearchActive}
+                  setTypeList={setTypeList}/>
 
-   <Header>
-      {
-        searchActive === false
-        ?<Title>Tarefas</Title>
-          
-        : <InputSearch
-              value={searchText} 
-              onChangeText={text => setSearchText(text)}
-              autoCorrect={false}
-              autoCapitalize="none"
-              placeholder="Procurar Tarefas"
-              />
-      }
-
-      <SearchButton onPress={() => setSearchActive(setSearchActive => !setSearchActive)}>
-        <Ionicons name="ios-search" size={20} color="#FFF"></Ionicons>
-      </SearchButton>
-      
-      <MenuButton>    
-        <MenuTrigger>
-          <Ionicons name="ios-menu" size={20} color="#FFF"></Ionicons>
-        </MenuTrigger>
-        <MenuOptions>
-          <MenuOption onSelect={() => setTypeList('all')}>
-            <TextMenu>Todos</TextMenu>
-          </MenuOption>
-          <MenuOption onSelect={() => setTypeList('doing')} >
-            <TextMenu>Pendentes</TextMenu>
-          </MenuOption>
-          <MenuOption onSelect={() => setTypeList('done')} >
-            <TextMenu>Completos</TextMenu>
-          </MenuOption>
-        </MenuOptions>
-      </MenuButton>
-
-    </Header>
      <NewItemForm> 
       <InputNewItem 
         autoCorrect={false}
