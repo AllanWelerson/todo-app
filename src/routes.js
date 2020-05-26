@@ -35,16 +35,15 @@ function HomeTab() {
                     break;
                 }
            
-          
-    
-
                 return <Ionicons name={iconName} size={size} color={color} />;
               },
-            })}
+            })
+          }
             tabBarOptions={{
               activeTintColor: '#95B2FC',
               inactiveTintColor: 'gray',
             }}
+           
           >
 
         <Tab.Screen name="Perfil" component={Perfil}/>
@@ -58,7 +57,7 @@ function HomeTab() {
 export default function Routes() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator  screenOptions={{headerShown: false,  gestureEnabled: true}} >
         <Stack.Screen name="Home" component={HomeTab}/>
         <Stack.Screen name="Item" component={Item}/>
       </Stack.Navigator>

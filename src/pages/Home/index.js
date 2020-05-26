@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AsyncStorage, Alert, Text } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Container, TaskButton, TaskIconButton,
-         NewItemForm, InputNewItem, NewItemButton, TaskList, Task, TaskName, MenuButton, TextMenu  } from './styles';
+         NewItemForm, InputNewItem, NewItemButton, TaskList, Task, TaskName } from './styles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import HeaderTasks from '../../components/HeaderTasks';
@@ -11,7 +11,8 @@ import { TaskContext } from '../../contexts/TaskContext';
 const Home = () => {
 
   const navigation = useNavigation();
-  const { tasks, 
+  const { setTask,
+          tasks, 
           setTasks, 
           handleDone, 
           handleStar, 
@@ -32,6 +33,11 @@ const Home = () => {
       setTasks(JSON.parse(t));
     }
 
+  }
+
+  function handleNavigateToTask(task){
+    setTask(task);
+    navigation.navigate("Item");
   }
 
   function deleteTask(name) {
@@ -127,7 +133,7 @@ const Home = () => {
             }
             </TaskIconButton>
             
-            <TaskButton onPress={() => navigation.navigate("Item")}
+            <TaskButton onPress={() => handleNavigateToTask(task)}
                         onLongPress={() => deleteTask(task.name)}>
               <TaskName>
                 {task.name}
